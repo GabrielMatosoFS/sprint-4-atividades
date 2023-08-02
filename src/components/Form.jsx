@@ -1,19 +1,30 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema } from "./formSchema";
+import { api } from "../services/api";
 
 export const Form = () => {
    const {
       register,
       handleSubmit,
       formState: { errors },
+      reset
    } = useForm({
       resolver: zodResolver(formSchema),
    });
 
+   const sendEmail = async (formData) => {
+      try {
+         await api.post("/emails", formData);
+         alert("Mensagem enviada com sucesso!");
+      } catch (error) {
+         console.log(error);
+      }
+   }
+
    const submit = (formData) => {
-      console.log(formData);
-      alert("Mensagem enviada com sucesso!");
+      sendEmail(formData);
+      reset();
    };
 
    return (
